@@ -169,5 +169,8 @@
     <string name="app_tunneling_notification_protected_all">All apps are protected!</string>
     <string name="app_tunneling_notification_unprotected_one">%s is unprotected!</string>
     <string name="app_tunneling_notification_unprotected_all">All apps are unprotected!</string>
+    <string name="app_tunneling_config_system_apps">Show system apps</string>
+    <string name="app_tunneling_config_new_apps">Protect new apps</string>
+    <string name="app_tunneling_config_new_apps_description">Add newly installed apps to the protected list</string>
 
 </resources>
