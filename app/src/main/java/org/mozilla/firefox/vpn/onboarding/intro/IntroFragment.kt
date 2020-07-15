@@ -5,19 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.content.ContextCompat
-import androidx.core.view.get
 import androidx.fragment.app.FragmentManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.mozilla.firefox.vpn.R
 import org.mozilla.firefox.vpn.databinding.FragmentIntroBinding
+import org.mozilla.firefox.vpn.util.color
 import org.mozilla.firefox.vpn.util.viewBinding
 
 class IntroFragment : BottomSheetDialogFragment() {
@@ -34,8 +29,6 @@ class IntroFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupIntroPager()
-        setupIndicators()
-        setCurrentIndicator(0)
 
         binding.closeBtn.setOnClickListener {
             dismiss()
@@ -74,37 +67,13 @@ class IntroFragment : BottomSheetDialogFragment() {
         binding.introPager.adapter = adapter
         val snapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(binding.introPager)
+        val decoration =
+            DotsIndicatorDecoration(context!!,
+                colorActive = context!!.color(R.color.blue50),
+                colorInactive = context!!.color(R.color.gray20)
+            )
+        binding.introPager.addItemDecoration(decoration)
         binding.introPager.isNestedScrollingEnabled = false
-
-        binding.introPager.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                val position = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-                setCurrentIndicator(position)
-            }
-        })
-    }
-
-    private fun setupIndicators() {
-        val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        params.setMargins(8, 0, 8, 0)
-        for (i in 0 until adapter.itemCount) {
-            val imageView = ImageView(context)
-            imageView.layoutParams = params
-            binding.indicatorLayout.addView(imageView)
-        }
-    }
-
-    private fun setCurrentIndicator(index: Int) {
-        val childCount = binding.indicatorLayout.childCount
-        for (i in 0 until childCount) {
-            val imageView = binding.indicatorLayout[i] as ImageView
-            if (i == index) {
-                imageView.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_indicator_active))
-            } else {
-                imageView.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_indicator_inactive))
-            }
-        }
     }
 
     private val bottomSheetBehaviorCallback = object : BottomSheetBehavior.BottomSheetCallback() {
